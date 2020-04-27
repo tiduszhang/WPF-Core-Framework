@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dragablz.NetCore" Version="0.3.3" />
     <PackageReference Include="fastJSON" Version="2.3.2" />
     <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.1.2-ci1345" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\MVVM\MVVM.csproj" />
+    <ProjectReference Include="..\Themes\Themes.csproj" />
   </ItemGroup>
 
 </Project>

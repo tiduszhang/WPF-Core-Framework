@@ -33,6 +33,18 @@ namespace MVVM
         /// </summary>
         private IDictionary<string, object> _ValueDictionary = new Dictionary<string, object>();
 
+        private List<object> _list { get; set; }
+
+        public NotifyPropertyBase(string json)
+        {
+            var parse = fastJSON.JSON.Parse(json);
+
+            if (parse is IDictionary<string, object>)
+                _ValueDictionary = (IDictionary<string, object>)parse;
+            else
+                _list = (List<object>)parse;
+        }
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -63,22 +75,40 @@ namespace MVVM
         /// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = this._ValueDictionary.FirstOrDefault(dictionary => dictionary.Key.ToLower() == binder.Name.ToLower()).Value;
+            result = this._ValueDictionary.FirstOrDefault(dictionary => dictionary.Key.ToLowerInvariant() == binder.Name.ToLowerInvariant()).Value;
+
+            //if (result is IDictionary<string, object>)
+            //{
+            //    result = new NotifyPropertyBase(result as IDictionary<string, object>);
+            //}
+            //else if (result is ArrayList && (result as ArrayList) is IDictionary<string, object>)
+            //{
+            //    result = new List<NotifyPropertyBase>((result as ArrayList).Cast<IDictionary<string, object>>().Select(x => new NotifyPropertyBase(x)));
+            //}
+            //else if (result is ArrayList)
+            //{
+            //    result = new List<NotifyPropertyBase>((result as ArrayList).Cast<NotifyPropertyBase>());
+            //}
+
+            //return base.TryGetMember(binder, out result);
 
             if (result is IDictionary<string, object>)
             {
                 result = new NotifyPropertyBase(result as IDictionary<string, object>);
             }
-            else if (result is ArrayList && (result as ArrayList) is IDictionary<string, object>)
+            else if (result is List<object>)
             {
-                result = new List<NotifyPropertyBase>((result as ArrayList).Cast<IDictionary<string, object>>().Select(x => new NotifyPropertyBase(x)));
-            }
-            else if (result is ArrayList)
-            {
-                result = new List<NotifyPropertyBase>((result as ArrayList).Cast<NotifyPropertyBase>());
+                List<object> list = new List<object>();
+                foreach (object item in (List<object>)result)
+                {
+                    if (item is IDictionary<string, object>)
+                        list.Add(new NotifyPropertyBase(item as IDictionary<string, object>));
+                    else
+                        list.Add(item);
+                }
+                result = list;
             }
 
-            //return base.TryGetMember(binder, out result);
             return true;
         }
 
@@ -114,8 +144,8 @@ namespace MVVM
         /// <param name="value"></param>
         /// <returns></returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            var data = this._ValueDictionary.FirstOrDefault(dictionary => dictionary.Key.ToLower() == binder.Name.ToLower());
+        { 
+            var data = this._ValueDictionary.FirstOrDefault(dictionary => dictionary.Key.ToLowerInvariant() == binder.Name.ToLowerInvariant());
 
             if (!String.IsNullOrWhiteSpace(data.Key))
             {

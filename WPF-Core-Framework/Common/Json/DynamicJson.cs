@@ -36,9 +36,15 @@ namespace Common
         /// <param name="dictionary"></param>
         public DynamicJson(IDictionary<string, object> dictionary)
         {
-            if (dictionary == null)
-                throw new ArgumentNullException("dictionary");
-            _dictionary = dictionary;
+            if (dictionary != null)
+            {
+                //dictionary = new Dictionary<string, object>();
+                _dictionary = dictionary;
+            }
+
+            //if (dictionary == null)
+            //    throw new ArgumentNullException("dictionary");
+            //_dictionary = dictionary;
         }
 
         /// <summary>

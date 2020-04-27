@@ -27,7 +27,13 @@ namespace Common
         /// <returns></returns>
         public static T ToObject<T>(this string value) where T : class
         {
-            return fastJSON.JSON.ToObject<T>(value);
+            return fastJSON.JSON.ToObject<T>(value, new fastJSON.JSONParameters()
+            {
+                IgnoreAttributes = new List<Type>()
+                {
+                    typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
+                }
+            });
         }
 
         /// <summary>
@@ -38,7 +44,13 @@ namespace Common
         /// <returns></returns>
         public static string ToJsonString<T>(this T obj) where T : class
         {
-            return fastJSON.JSON.ToJSON(obj);
+            return fastJSON.JSON.ToJSON(obj, new fastJSON.JSONParameters()
+            {
+                IgnoreAttributes = new List<Type>()
+                {
+                    typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
+                }
+            });
         }
     }
 }

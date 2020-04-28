@@ -3,14 +3,14 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <UseWPF>true</UseWPF> 
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dragablz.NetCore" Version="0.3.3" />
     <PackageReference Include="fastJSON" Version="2.3.2" />
     <PackageReference Include="log4net" Version="2.0.8" />
-    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.1.2-ci1345" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.1.2-ci1356" />
   </ItemGroup>
 
   <ItemGroup>

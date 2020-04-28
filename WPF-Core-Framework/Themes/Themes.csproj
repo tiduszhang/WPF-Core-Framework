@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dragablz.NetCore" Version="0.3.3" />
-    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.1.2-ci1345" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.1.2-ci1356" />
   </ItemGroup>
 
 </Project>

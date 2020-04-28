@@ -134,7 +134,7 @@ namespace Common
                 var language = languages.FirstOrDefault(o => o.LanguageFile == langFile);
                 if (language != null)
                 {
-                    var culture = new System.Globalization.CultureInfo(language.ID);
+                    var culture = System.Globalization.CultureInfo.CreateSpecificCulture(language.ID);
                     System.Threading.Thread.CurrentThread.CurrentCulture = culture;
                     System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
                 }

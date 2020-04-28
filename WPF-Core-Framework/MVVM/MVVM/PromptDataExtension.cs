@@ -36,7 +36,19 @@ namespace MVVM
                         try
                         {
                             DisplayAttribute vAttribute = attribute as DisplayAttribute;
-                            strPromptData = vAttribute.GetPrompt();
+                            if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                            {
+                                strPromptData = Common.LangHelper.GetValue(vAttribute.ShortName);
+                            }
+
+                            if (String.IsNullOrWhiteSpace(strPromptData))
+                            {
+                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                                {
+                                    vAttribute.ResourceType = null;
+                                }
+                                strPromptData = vAttribute.GetPrompt();
+                            }
                             break;
                         }
                         catch (Exception ex)

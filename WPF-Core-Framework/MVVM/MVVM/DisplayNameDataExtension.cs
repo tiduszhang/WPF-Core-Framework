@@ -36,7 +36,19 @@ namespace MVVM
                         try
                         {
                             DisplayAttribute vAttribute = attribute as DisplayAttribute;
-                            strName = vAttribute.GetName();
+                            if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                            { 
+                                strName = Common.LangHelper.GetValue(vAttribute.ShortName);
+                            }
+
+                            if (String.IsNullOrWhiteSpace(strName))
+                            {
+                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                                {
+                                    vAttribute.ResourceType = null;
+                                }
+                                strName = vAttribute.GetName();
+                            }
                             break;
                         }
                         catch (Exception ex)

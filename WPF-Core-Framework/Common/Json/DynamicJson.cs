@@ -15,10 +15,17 @@ namespace Common
     /// @author zhangsx
     /// @date 2017/04/12 11:18:19
     /// </summary>
-    public sealed class DynamicJson : DynamicObject
+    public class DynamicJson : DynamicObject
     {
         private IDictionary<string, object> _dictionary;
         private List<object> _list { get; set; }
+
+        public DynamicJson()
+        {
+            _dictionary = new Dictionary<string, object>();
+            _list = new List<object>();
+        }
+
 
         public DynamicJson(string json)
         {

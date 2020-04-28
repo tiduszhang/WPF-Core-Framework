@@ -38,7 +38,19 @@ namespace MVVM
                             ValidationAttribute vAttribute = attribute as ValidationAttribute;
                             if (!vAttribute.IsValid(value))
                             {
-                                strErrorMessage = !String.IsNullOrWhiteSpace(vAttribute.ErrorMessage) ? vAttribute.ErrorMessage : vAttribute.GetValidationResult(value, new ValidationContext(value, null, null)).ErrorMessage;
+                                if (vAttribute.ErrorMessageResourceType == typeof(Common.LanguageResource))
+                                {
+                                    strErrorMessage = Common.LangHelper.GetValue(vAttribute.ErrorMessageResourceName);
+                                }
+
+                                if (String.IsNullOrWhiteSpace(strErrorMessage))
+                                {
+                                    if (vAttribute.ErrorMessageResourceType == typeof(Common.LanguageResource))
+                                    {
+                                        vAttribute.ErrorMessageResourceType = null;
+                                    }
+                                    strErrorMessage = !String.IsNullOrWhiteSpace(vAttribute.ErrorMessage) ? vAttribute.ErrorMessage : vAttribute.GetValidationResult(value, new ValidationContext(value, null, null)).ErrorMessage;
+                                }
                                 break;
                             }
                         }

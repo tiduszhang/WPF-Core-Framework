@@ -37,7 +37,20 @@ namespace MVVM
                         try
                         {
                             DisplayAttribute vAttribute = attribute as DisplayAttribute;
-                            strDescription = vAttribute.GetDescription();
+
+                            if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                            {
+                                strDescription = Common.LangHelper.GetValue(vAttribute.ShortName);
+                            }
+
+                            if (String.IsNullOrWhiteSpace(strDescription))
+                            {
+                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                                {
+                                    vAttribute.ResourceType = null;
+                                }
+                                strDescription = vAttribute.GetDescription();
+                            }
                             break;
                         }
                         catch (Exception ex)

@@ -40,7 +40,7 @@ namespace MVVM
 
                             if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                             {
-                                strDescription = Common.LangHelper.GetValue(vAttribute.ShortName);
+                                strDescription = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Description, "description");
                             }
 
                             if (String.IsNullOrWhiteSpace(strDescription))

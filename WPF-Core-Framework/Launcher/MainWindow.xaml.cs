@@ -23,6 +23,8 @@ namespace Launcher
         public MainWindow()
         {
             InitializeComponent();
+
+            Application.Current.MainWindow = this;
         }
     }
 }

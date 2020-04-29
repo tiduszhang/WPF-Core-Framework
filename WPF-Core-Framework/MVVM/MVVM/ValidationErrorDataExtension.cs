@@ -40,7 +40,7 @@ namespace MVVM
                             {
                                 if (vAttribute.ErrorMessageResourceType == typeof(Common.LanguageResource))
                                 {
-                                    strErrorMessage = Common.LangHelper.GetValue(vAttribute.ErrorMessageResourceName);
+                                    strErrorMessage = Common.LangHelper.GetValue(vAttribute.ErrorMessageResourceName, vAttribute.ErrorMessage, "error");
                                 }
 
                                 if (String.IsNullOrWhiteSpace(strErrorMessage))

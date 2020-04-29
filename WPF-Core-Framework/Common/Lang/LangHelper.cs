@@ -47,8 +47,10 @@ namespace Common
         /// 根据关键字获取对应语言的文本
         /// </summary>
         /// <param name="key"></param>
+        /// <param name="defaultvalue"></param>
+        /// <param name="valueMark"></param>
         /// <returns></returns>
-        public static string GetValue(string key)
+        public static string GetValue(string key, string defaultvalue = "", string valueMark = "value")
         {
             // 当前语言
             string currentLangFile = langPath + langFile;
@@ -57,7 +59,7 @@ namespace Common
             string defaultLangFile = langPath + langDefaultFile;
 
             //文本
-            string value = "";
+            string value = defaultvalue;
 
             //没有key
             if (String.IsNullOrWhiteSpace(key))
@@ -83,14 +85,14 @@ namespace Common
             if (String.IsNullOrWhiteSpace(value)
                && System.IO.File.Exists(currentLangFile))
             {
-                value = XmlHelper.GetValue(currentLangFile, @"langs/lang[@key='" + key + "']", "value");
+                value = XmlHelper.GetValue(currentLangFile, @"langs/lang[@key='" + key + "']", valueMark);
             }
 
             //若指定的语言没有值则获取默认语言
             if (String.IsNullOrWhiteSpace(value)
                 && System.IO.File.Exists(defaultLangFile))
             {
-                value = XmlHelper.GetValue(defaultLangFile, @"langs/lang[@key='" + key + "']", "value");
+                value = XmlHelper.GetValue(defaultLangFile, @"langs/lang[@key='" + key + "']", valueMark);
             }
 
             if (!String.IsNullOrWhiteSpace(value))
@@ -102,6 +104,12 @@ namespace Common
                         dictionaryLangs.Add(key, value);
                     }
                 }
+            }
+
+            //如果没有获取到则返回默认值
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                value = defaultvalue;
             }
 
             return value;

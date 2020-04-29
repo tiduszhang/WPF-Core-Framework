@@ -38,7 +38,7 @@ namespace MVVM
                             DisplayAttribute vAttribute = attribute as DisplayAttribute;
                             if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                             {
-                                strShortName = Common.LangHelper.GetValue(vAttribute.ShortName);
+                                strShortName = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.ShortName, "shortname");
                             }
 
                             if (String.IsNullOrWhiteSpace(strShortName))

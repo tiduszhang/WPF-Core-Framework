@@ -5,7 +5,7 @@ namespace MVVM
 	/// <summary>
 	/// The Messenger is a class allowing objects to exchange messages.
 	/// </summary>
-	public interface IMessenger
+	public interface IMessager
 	{
 		/// <summary>
 		/// Registers a recipient for a type of message TMessage. The action

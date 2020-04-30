@@ -7,58 +7,58 @@ namespace MVVM
 	/// <summary>
 	/// The Messenger is a class allowing objects to exchange messages.
 	/// </summary>
-	public class Messenger : IMessenger
+	public class Messager : IMessager
 	{
-		private static Messenger _defaultInstance;
+		private static Messager _defaultInstance;
 
-		private Dictionary<Type, List<Messenger.WeakActionAndToken>> _recipientsOfSubclassesAction;
+		private Dictionary<Type, List<Messager.WeakActionAndToken>> _recipientsOfSubclassesAction;
 
-		private Dictionary<Type, List<Messenger.WeakActionAndToken>> _recipientsStrictAction;
+		private Dictionary<Type, List<Messager.WeakActionAndToken>> _recipientsStrictAction;
 
 		/// <summary>
 		/// Gets the Messenger's default instance, allowing
 		/// to register and send messages in a static manner.
 		/// </summary>
-		public static Messenger Default
+		public static Messager Default
 		{
 			get
 			{
-				if (Messenger._defaultInstance == null)
+				if (Messager._defaultInstance == null)
 				{
-					Messenger._defaultInstance = new Messenger();
+					Messager._defaultInstance = new Messager();
 				}
-				return Messenger._defaultInstance;
+				return Messager._defaultInstance;
 			}
 		}
         /// <summary>
         /// 
         /// </summary>
-		public Messenger()
+		public Messager()
 		{
 		}
 
 		private void Cleanup()
 		{
-			Messenger.CleanupList(this._recipientsOfSubclassesAction);
-			Messenger.CleanupList(this._recipientsStrictAction);
+			Messager.CleanupList(this._recipientsOfSubclassesAction);
+			Messager.CleanupList(this._recipientsStrictAction);
 		}
 
-		private static void CleanupList(IDictionary<Type, List<Messenger.WeakActionAndToken>> lists)
+		private static void CleanupList(IDictionary<Type, List<Messager.WeakActionAndToken>> lists)
 		{
 			if (lists != null)
 			{
 				List<Type> types = new List<Type>();
-				foreach (KeyValuePair<Type, List<Messenger.WeakActionAndToken>> list in lists)
+				foreach (KeyValuePair<Type, List<Messager.WeakActionAndToken>> list in lists)
 				{
-					List<Messenger.WeakActionAndToken> weakActionAndTokens = new List<Messenger.WeakActionAndToken>();
-					foreach (Messenger.WeakActionAndToken value in list.Value)
+					List<Messager.WeakActionAndToken> weakActionAndTokens = new List<Messager.WeakActionAndToken>();
+					foreach (Messager.WeakActionAndToken value in list.Value)
 					{
 						if ((value.Action == null ? true : !value.Action.IsAlive))
 						{
 							weakActionAndTokens.Add(value);
 						}
 					}
-					foreach (Messenger.WeakActionAndToken weakActionAndToken in weakActionAndTokens)
+					foreach (Messager.WeakActionAndToken weakActionAndToken in weakActionAndTokens)
 					{
 						list.Value.Remove(weakActionAndToken);
 					}
@@ -107,9 +107,9 @@ namespace MVVM
 		/// a custom instance, for example for unit testing purposes.
 		/// </summary>
 		/// <param name="newMessenger">The instance that will be used as Messenger.Default.</param>
-		public static void OverrideDefault(Messenger newMessenger)
+		public static void OverrideDefault(Messager newMessenger)
 		{
-			Messenger._defaultInstance = newMessenger;
+			Messager._defaultInstance = newMessenger;
 		}
 
 		/// <summary>
@@ -214,14 +214,14 @@ namespace MVVM
 		/// of type TMessage is sent.</param>
 		public virtual void Register<TMessage>(object recipient, object token, bool receiveDerivedMessagesToo, Action<TMessage> action)
 		{
-			Dictionary<Type, List<Messenger.WeakActionAndToken>> types;
-			List<Messenger.WeakActionAndToken> item;
+			Dictionary<Type, List<Messager.WeakActionAndToken>> types;
+			List<Messager.WeakActionAndToken> item;
 			Type type = typeof(TMessage);
 			if (!receiveDerivedMessagesToo)
 			{
 				if (this._recipientsStrictAction == null)
 				{
-					this._recipientsStrictAction = new Dictionary<Type, List<Messenger.WeakActionAndToken>>();
+					this._recipientsStrictAction = new Dictionary<Type, List<Messager.WeakActionAndToken>>();
 				}
 				types = this._recipientsStrictAction;
 			}
@@ -229,7 +229,7 @@ namespace MVVM
 			{
 				if (this._recipientsOfSubclassesAction == null)
 				{
-					this._recipientsOfSubclassesAction = new Dictionary<Type, List<Messenger.WeakActionAndToken>>();
+					this._recipientsOfSubclassesAction = new Dictionary<Type, List<Messager.WeakActionAndToken>>();
 				}
 				types = this._recipientsOfSubclassesAction;
 			}
@@ -239,11 +239,11 @@ namespace MVVM
 			}
 			else
 			{
-				item = new List<Messenger.WeakActionAndToken>();
+				item = new List<Messager.WeakActionAndToken>();
 				types.Add(type, item);
 			}
 			WeakAction<TMessage> weakAction = new WeakAction<TMessage>(recipient, action);
-			Messenger.WeakActionAndToken weakActionAndToken = new Messenger.WeakActionAndToken()
+			Messager.WeakActionAndToken weakActionAndToken = new Messager.WeakActionAndToken()
 			{
 				Action = weakAction,
 				Token = token
@@ -257,7 +257,7 @@ namespace MVVM
 		/// </summary>
 		public static void Reset()
 		{
-			Messenger._defaultInstance = null;
+			Messager._defaultInstance = null;
 		}
 
 		/// <summary>
@@ -306,16 +306,16 @@ namespace MVVM
 			this.SendToTargetOrType<TMessage>(message, null, token);
 		}
 
-		private static void SendToList<TMessage>(TMessage message, IEnumerable<Messenger.WeakActionAndToken> list, Type messageTargetType, object token)
+		private static void SendToList<TMessage>(TMessage message, IEnumerable<Messager.WeakActionAndToken> list, Type messageTargetType, object token)
 		{
 			bool flag;
 			if (list != null)
 			{
-				List<Messenger.WeakActionAndToken> weakActionAndTokens = list.Take<Messenger.WeakActionAndToken>(list.Count<Messenger.WeakActionAndToken>()).ToList<Messenger.WeakActionAndToken>();
-				foreach (Messenger.WeakActionAndToken weakActionAndToken in weakActionAndTokens)
+				List<Messager.WeakActionAndToken> weakActionAndTokens = list.Take<Messager.WeakActionAndToken>(list.Count<Messager.WeakActionAndToken>()).ToList<Messager.WeakActionAndToken>();
+				foreach (Messager.WeakActionAndToken weakActionAndToken in weakActionAndTokens)
 				{
 					IExecuteWithObject action = weakActionAndToken.Action as IExecuteWithObject;
-					if (action == null || !weakActionAndToken.Action.IsAlive || weakActionAndToken.Action.Target == null || !(messageTargetType == null) && !(weakActionAndToken.Action.Target.GetType() == messageTargetType) && !Messenger.Implements(weakActionAndToken.Action.Target.GetType(), messageTargetType))
+					if (action == null || !weakActionAndToken.Action.IsAlive || weakActionAndToken.Action.Target == null || !(messageTargetType == null) && !(weakActionAndToken.Action.Target.GetType() == messageTargetType) && !Messager.Implements(weakActionAndToken.Action.Target.GetType(), messageTargetType))
 					{
 						flag = false;
 					}
@@ -340,23 +340,23 @@ namespace MVVM
 			Type type = typeof(TMessage);
 			if (this._recipientsOfSubclassesAction != null)
 			{
-				List<Type> list = this._recipientsOfSubclassesAction.Keys.Take<Type>(this._recipientsOfSubclassesAction.Count<KeyValuePair<Type, List<Messenger.WeakActionAndToken>>>()).ToList<Type>();
+				List<Type> list = this._recipientsOfSubclassesAction.Keys.Take<Type>(this._recipientsOfSubclassesAction.Count<KeyValuePair<Type, List<Messager.WeakActionAndToken>>>()).ToList<Type>();
 				foreach (Type type1 in list)
 				{
-					List<Messenger.WeakActionAndToken> item = null;
-					if ((type == type1 || type.IsSubclassOf(type1) ? true : Messenger.Implements(type, type1)))
+					List<Messager.WeakActionAndToken> item = null;
+					if ((type == type1 || type.IsSubclassOf(type1) ? true : Messager.Implements(type, type1)))
 					{
 						item = this._recipientsOfSubclassesAction[type1];
 					}
-					Messenger.SendToList<TMessage>(message, item, messageTargetType, token);
+					Messager.SendToList<TMessage>(message, item, messageTargetType, token);
 				}
 			}
 			if (this._recipientsStrictAction != null)
 			{
 				if (this._recipientsStrictAction.ContainsKey(type))
 				{
-					List<Messenger.WeakActionAndToken> weakActionAndTokens = this._recipientsStrictAction[type];
-					Messenger.SendToList<TMessage>(message, weakActionAndTokens, messageTargetType, token);
+					List<Messager.WeakActionAndToken> weakActionAndTokens = this._recipientsStrictAction[type];
+					Messager.SendToList<TMessage>(message, weakActionAndTokens, messageTargetType, token);
 				}
 			}
 			this.Cleanup();
@@ -369,8 +369,8 @@ namespace MVVM
 		/// <param name="recipient">The recipient that must be unregistered.</param>
 		public virtual void Unregister(object recipient)
 		{
-			Messenger.UnregisterFromLists(recipient, this._recipientsOfSubclassesAction);
-			Messenger.UnregisterFromLists(recipient, this._recipientsStrictAction);
+			Messager.UnregisterFromLists(recipient, this._recipientsOfSubclassesAction);
+			Messager.UnregisterFromLists(recipient, this._recipientsStrictAction);
 		}
 
 		/// <summary>
@@ -416,8 +416,8 @@ namespace MVVM
 		/// the recipient and for the message type TMessage.</param>
 		public virtual void Unregister<TMessage>(object recipient, Action<TMessage> action)
 		{
-			Messenger.UnregisterFromLists<TMessage>(recipient, action, this._recipientsStrictAction);
-			Messenger.UnregisterFromLists<TMessage>(recipient, action, this._recipientsOfSubclassesAction);
+			Messager.UnregisterFromLists<TMessage>(recipient, action, this._recipientsStrictAction);
+			Messager.UnregisterFromLists<TMessage>(recipient, action, this._recipientsOfSubclassesAction);
 			this.Cleanup();
 		}
 
@@ -436,12 +436,12 @@ namespace MVVM
 		/// the recipient and for the message type TMessage.</param>
 		public virtual void Unregister<TMessage>(object recipient, object token, Action<TMessage> action)
 		{
-			Messenger.UnregisterFromLists<TMessage>(recipient, token, action, this._recipientsStrictAction);
-			Messenger.UnregisterFromLists<TMessage>(recipient, token, action, this._recipientsOfSubclassesAction);
+			Messager.UnregisterFromLists<TMessage>(recipient, token, action, this._recipientsStrictAction);
+			Messager.UnregisterFromLists<TMessage>(recipient, token, action, this._recipientsOfSubclassesAction);
 			this.Cleanup();
 		}
 
-		private static void UnregisterFromLists(object recipient, Dictionary<Type, List<Messenger.WeakActionAndToken>> lists)
+		private static void UnregisterFromLists(object recipient, Dictionary<Type, List<Messager.WeakActionAndToken>> lists)
 		{
 			if ((recipient == null || lists == null ? false : lists.Count != 0))
 			{
@@ -449,7 +449,7 @@ namespace MVVM
 				{
 					foreach (Type key in lists.Keys)
 					{
-						foreach (Messenger.WeakActionAndToken item in lists[key])
+						foreach (Messager.WeakActionAndToken item in lists[key])
 						{
 							WeakAction action = item.Action;
 							if ((action == null ? false : recipient == action.Target))
@@ -462,7 +462,7 @@ namespace MVVM
 			}
 		}
 
-		private static void UnregisterFromLists<TMessage>(object recipient, Action<TMessage> action, Dictionary<Type, List<Messenger.WeakActionAndToken>> lists)
+		private static void UnregisterFromLists<TMessage>(object recipient, Action<TMessage> action, Dictionary<Type, List<Messager.WeakActionAndToken>> lists)
 		{
 			bool flag;
 			Type type = typeof(TMessage);
@@ -470,7 +470,7 @@ namespace MVVM
 			{
 				lock (lists)
 				{
-					foreach (Messenger.WeakActionAndToken item in lists[type])
+					foreach (Messager.WeakActionAndToken item in lists[type])
 					{
                         if (!(item.Action is WeakAction<TMessage> weakAction) || recipient != weakAction.Target)
                         {
@@ -489,7 +489,7 @@ namespace MVVM
 			}
 		}
 
-		private static void UnregisterFromLists<TMessage>(object recipient, object token, Action<TMessage> action, Dictionary<Type, List<Messenger.WeakActionAndToken>> lists)
+		private static void UnregisterFromLists<TMessage>(object recipient, object token, Action<TMessage> action, Dictionary<Type, List<Messager.WeakActionAndToken>> lists)
 		{
 			bool flag;
 			Type type = typeof(TMessage);
@@ -497,7 +497,7 @@ namespace MVVM
 			{
 				lock (lists)
 				{
-					foreach (Messenger.WeakActionAndToken item in lists[type])
+					foreach (Messager.WeakActionAndToken item in lists[type])
 					{
                         if (!(item.Action is WeakAction<TMessage> weakAction) || recipient != weakAction.Target || action != null && !(action == weakAction.Action))
                         {

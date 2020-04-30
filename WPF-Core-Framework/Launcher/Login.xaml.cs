@@ -58,14 +58,22 @@ namespace Launcher
                  }
                  else if (message.Key == LoginViewModel.MESSAGE_LOGINOK)//登陆成功
                  {
-                     Messager.Default.Unregister(this);
                      new MainWindow().Show(); //显示程序主窗口
                      this.Close();
                  }
              });
 
         }
-
+         
+        /// <summary>
+        /// 关闭窗口时
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Messager.Default.Unregister(this);
+            base.OnClosing(e);
+        }
     }
 
     /// <summary>

@@ -63,7 +63,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <materialDesign:PackIcon Kind="Login" Grid.Column="0" Margin="2"/>
-                <TextBlock Text="{Binding DisplayName[LoginCommand]}" Grid.Column="1"  Margin="2"/>
+                <TextBlock Text="{Binding DisplayName[LoginCommand]}" Grid.Column="1"  Margin="15,2"/>
             </Grid>
         </Button>
     </Grid>

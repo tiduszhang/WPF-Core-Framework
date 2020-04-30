@@ -27,6 +27,7 @@ namespace Launcher
         /// 对话框设置
         /// </summary>
         private MetroDialogSettings metroDialogSettings = null;
+
         /// <summary>
         /// DialogDictionary
         /// </summary>
@@ -49,7 +50,7 @@ namespace Launcher
                 //SuppressDefaultResources = true
             };
 
-            Messenger.Default.Register<NotificationMessage>(this, message =>
+            Messager.Default.Register<NotificationMessage>(this, message =>
              {
                  if (message.Key == LoginViewModel.MESSAGE_LOGINFAIL)//登陆失败
                  {
@@ -57,8 +58,8 @@ namespace Launcher
                  }
                  else if (message.Key == LoginViewModel.MESSAGE_LOGINOK)//登陆成功
                  {
-                     Messenger.Default.Unregister(this);
-                     new MainWindow().Show();
+                     Messager.Default.Unregister(this);
+                     new MainWindow().Show(); //显示程序主窗口
                      this.Close();
                  }
              });
@@ -70,7 +71,7 @@ namespace Launcher
     /// <summary>
     /// 用户登陆逻辑
     /// </summary>
-    public class LoginViewModel
+    public class LoginViewModel : NotifyBaseModel
     {
         /// <summary>
         /// 登陆失败
@@ -89,6 +90,7 @@ namespace Launcher
         /// <summary>
         /// 实体
         /// </summary>
+        [Display(Name = "用户登陆", ResourceType = typeof(LanguageResource), ShortName = "Login_Title")]
         public LoginModel LoginModel
         {
             get
@@ -104,6 +106,7 @@ namespace Launcher
         /// <summary>
         /// 用户点击用户登陆按钮触发
         /// </summary>
+        [Display(Name = "登  陆", ResourceType = typeof(LanguageResource), ShortName = "Login_LoginButton")]
         public ICommand LoginCommand
         {
             get
@@ -113,7 +116,7 @@ namespace Launcher
                     if (String.IsNullOrWhiteSpace(LoginModel.UserName))
                     {
                         //没有输入用户名
-                        Messenger.Default.Send(new NotificationMessage()
+                        Messager.Default.Send(new NotificationMessage()
                         {
                             Key = MESSAGE_LOGINFAIL,
                             Data = LangHelper.GetValue("Login_Fail_UserName", "请输入用户名！")
@@ -123,7 +126,7 @@ namespace Launcher
                     if (String.IsNullOrWhiteSpace(LoginModel.Password))
                     {
                         //没有输入密码
-                        Messenger.Default.Send(new NotificationMessage()
+                        Messager.Default.Send(new NotificationMessage()
                         {
                             Key = MESSAGE_LOGINFAIL,
                             Data = LangHelper.GetValue("Login_Fail_Password", "请输入密码！")
@@ -133,10 +136,10 @@ namespace Launcher
                     try
                     {
                         //登陆数据验证
-                        if (LoginModel.Login())
+                        if (!LoginModel.Login())
                         {
                             //登陆失败
-                            Messenger.Default.Send(new NotificationMessage()
+                            Messager.Default.Send(new NotificationMessage()
                             {
                                 Key = MESSAGE_LOGINFAIL,
                                 Data = LangHelper.GetValue("Login_Fail", "用户名或密码错误！")
@@ -148,7 +151,7 @@ namespace Launcher
                     {
                         ex.ToString().WriteToLog(log4net.Core.Level.Error);
                         //登陆失败
-                        Messenger.Default.Send(new NotificationMessage()
+                        Messager.Default.Send(new NotificationMessage()
                         {
                             Key = MESSAGE_LOGINFAIL,
                             Data = LangHelper.GetValue("Login_Fail_Exception", "登陆时出现异常，请稍后重试！")
@@ -157,6 +160,10 @@ namespace Launcher
                     }
 
                     //登陆成功
+                    Messager.Default.Send(new NotificationMessage()
+                    {
+                        Key = MESSAGE_LOGINOK,
+                    });
                 });
             }
         }

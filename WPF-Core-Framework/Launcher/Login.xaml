@@ -4,14 +4,67 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:MahApps="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Launcher"
-        mc:Ignorable="d" GlowBrush="{DynamicResource AccentColorBrush}"
-                   BorderThickness="1"
-        Title="Login" Height="450" Width="800">
+        xmlns:mvvm="clr-namespace:MVVM.View;assembly=MVVM"
+        mc:Ignorable="d" 
+        Name="window"
+        d:DataContext="{d:DesignData  Type=local:LoginViewModel}"
+        NonActiveWindowTitleBrush="{Binding WindowTitleBrush,ElementName=window}"
+        NonActiveBorderBrush="{Binding BorderBrush,ElementName=window}"
+        NonActiveGlowBrush="{Binding GlowBrush, ElementName=window}"
+        GlowBrush="{DynamicResource AccentColorBrush}"
+        ShowIconOnTitleBar="False"
+        BorderThickness="1"
+        WindowStartupLocation="CenterScreen"   SizeToContent="WidthAndHeight"  TitleBarHeight="124" MinWidth="419" ResizeMode="NoResize">
+    <MahApps:MetroWindow.WindowTitleBrush>
+        <ImageBrush ImageSource="/images/title_bg.png"/>
+    </MahApps:MetroWindow.WindowTitleBrush>
     <MahApps:MetroWindow.WindowButtonCommands>
-        <MahApps:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" />
+        <MahApps:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="32"/>
     </MahApps:MetroWindow.WindowButtonCommands>
-    <Grid>
-        
+    <MahApps:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding DataContext.DisplayName[LoginModel], ElementName=window}" Margin="10,5"/>
+        </DataTemplate>
+    </MahApps:MetroWindow.TitleTemplate>
+    <Grid Margin="50,20" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock  Grid.Row="0"  Grid.Column="1"  Margin="10,10,10,0"   Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[UserName]}"/>
+        <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Account" Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
+        <TextBox Name="txtUserName"
+                 Grid.Row="1"  Grid.Column="1" Margin="5"
+                 materialDesign:HintAssist.Hint="{Binding LoginModel.Prompt[UserName]}" 
+                 Text="{Binding LoginModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+        </TextBox>
+
+        <TextBlock  Grid.Row="2"  Grid.Column="1" Margin="10,10,10,0"  Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[Password]}"/>
+        <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+        <PasswordBox Name="txtPassword"
+                  Grid.Row="3" Grid.Column="1" Margin="5"
+                  materialDesign:HintAssist.Hint="{Binding LoginModel.Prompt[Password]}"
+                  materialDesign:TextFieldAssist.HasClearButton="True" mvvm:PasswordHelper.Password="{Binding LoginModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <Button  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding LoginCommand}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="15" Cursor="Hand"  >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="Login" Grid.Column="0" Margin="2"/>
+                <TextBlock Text="{Binding DisplayName[LoginCommand]}" Grid.Column="1"  Margin="2"/>
+            </Grid>
+        </Button>
     </Grid>
 </MahApps:MetroWindow>

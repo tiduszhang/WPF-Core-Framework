@@ -75,9 +75,9 @@ namespace Common
 
             lock (dictionaryLangs)
             {
-                if (dictionaryLangs.Contains(key))
+                if (dictionaryLangs.Contains(key + valueMark))
                 {
-                    value = dictionaryLangs[key].ToString();
+                    value = dictionaryLangs[key + valueMark].ToString();
                 }
             }
 
@@ -99,9 +99,9 @@ namespace Common
             {
                 lock (dictionaryLangs)
                 {
-                    if (!dictionaryLangs.Contains(key))
+                    if (!dictionaryLangs.Contains(key + valueMark))
                     {
-                        dictionaryLangs.Add(key, value);
+                        dictionaryLangs.Add(key + valueMark, value);
                     }
                 }
             }

@@ -45,8 +45,8 @@ namespace Launcher
                 CustomResourceDictionary = DialogDictionary,
                 AffirmativeButtonText = LangHelper.GetValue("Message", "确定", "ok"),
                 NegativeButtonText = LangHelper.GetValue("Message", "取消", "cancel")
-                //AffirmativeButtonText = LangHelper.GetValue("LoginMessage", "是", "yes"),
-                //NegativeButtonText = LangHelper.GetValue("LoginMessage", "否", "no")
+                //AffirmativeButtonText = LangHelper.GetValue("Message", "是", "yes"),
+                //NegativeButtonText = LangHelper.GetValue("Message", "否", "no")
                 //SuppressDefaultResources = true
             };
 

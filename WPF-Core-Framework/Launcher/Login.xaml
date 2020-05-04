@@ -41,20 +41,40 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock  Grid.Row="0"  Grid.Column="1"  Margin="10,10,10,0"   Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[UserName]}"/>
-        <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Account" Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
+        <!--<TextBlock  Grid.Row="0"  Grid.Column="1"  Margin="10,10,10,0"   Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[UserName]}"/>-->
         <TextBox Name="txtUserName"
                  Grid.Row="1"  Grid.Column="1" Margin="5"
-                 materialDesign:HintAssist.Hint="{Binding LoginModel.Prompt[UserName]}" 
-                 Text="{Binding LoginModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                 Text="{Binding LoginModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.FloatingScale="1"  materialDesign:TextFieldAssist.TextBoxViewMargin="2,3">
+            <materialDesign:HintAssist.Hint>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Grid.Column="0" Kind="Account" Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[UserName]}"  Margin="5,0" />
+                </Grid>
+            </materialDesign:HintAssist.Hint>
         </TextBox>
 
-        <TextBlock  Grid.Row="2"  Grid.Column="1" Margin="10,10,10,0"  Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[Password]}"/>
-        <materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+        <!--<TextBlock  Grid.Row="2"  Grid.Column="1" Margin="10,10,10,0"  Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[Password]}"/>-->
+        <!--<materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"  />-->
         <PasswordBox Name="txtPassword"
                   Grid.Row="3" Grid.Column="1" Margin="5"
-                  materialDesign:HintAssist.Hint="{Binding LoginModel.Prompt[Password]}"
-                  materialDesign:TextFieldAssist.HasClearButton="True" mvvm:PasswordHelper.Password="{Binding LoginModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                  materialDesign:HintAssist.IsFloating="True"  materialDesign:HintAssist.FloatingScale="1"  materialDesign:TextFieldAssist.TextBoxViewMargin="2,3"
+                  mvvm:PasswordHelper.Password="{Binding LoginModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+            <materialDesign:HintAssist.Hint>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[Password]}" Margin="5,0" />
+                </Grid>
+            </materialDesign:HintAssist.Hint>
+
+        </PasswordBox>
 
         <Button  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding LoginCommand}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="15" Cursor="Hand"  >
             <Grid>

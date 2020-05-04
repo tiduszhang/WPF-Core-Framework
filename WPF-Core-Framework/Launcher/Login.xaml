@@ -20,14 +20,19 @@
     <MahApps:MetroWindow.WindowTitleBrush>
         <ImageBrush ImageSource="/images/title_bg.png"/>
     </MahApps:MetroWindow.WindowTitleBrush>
-    <MahApps:MetroWindow.WindowButtonCommands>
+    <MahApps:MetroWindow.WindowButtonCommands><!-- 头部按钮样式-->
         <MahApps:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="32"/>
     </MahApps:MetroWindow.WindowButtonCommands>
-    <MahApps:MetroWindow.TitleTemplate>
+    <MahApps:MetroWindow.TitleTemplate> <!-- 头部背景 -->
         <DataTemplate>
             <TextBlock Text="{Binding DataContext.DisplayName[LoginModel], ElementName=window}" Margin="10,5"/>
         </DataTemplate>
     </MahApps:MetroWindow.TitleTemplate>
+    <MahApps:MetroWindow.RightWindowCommands ><!-- 头部右侧自定义按钮 -->
+        <MahApps:WindowCommands  VerticalContentAlignment="Top">
+            <Button Content="？" Height="32"/><!-- 关于 -->
+        </MahApps:WindowCommands>
+    </MahApps:MetroWindow.RightWindowCommands>
     <Grid Margin="50,20" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -45,7 +50,7 @@
         <TextBox Name="txtUserName"
                  Grid.Row="1"  Grid.Column="1" Margin="5"
                  Text="{Binding LoginModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.FloatingScale="1"  materialDesign:TextFieldAssist.TextBoxViewMargin="2,3">
-            <materialDesign:HintAssist.Hint>
+            <materialDesign:HintAssist.Hint><!-- 输入框水印 -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -62,8 +67,8 @@
         <PasswordBox Name="txtPassword"
                   Grid.Row="3" Grid.Column="1" Margin="5"
                   materialDesign:HintAssist.IsFloating="True"  materialDesign:HintAssist.FloatingScale="1"  materialDesign:TextFieldAssist.TextBoxViewMargin="2,3"
-                  mvvm:PasswordHelper.Password="{Binding LoginModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-            <materialDesign:HintAssist.Hint>
+                  mvvm:PasswordHelper.Password="{Binding LoginModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="IBeam" >
+            <materialDesign:HintAssist.Hint><!-- 输入框水印 -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -73,11 +78,10 @@
                     <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[Password]}" Margin="5,0" />
                 </Grid>
             </materialDesign:HintAssist.Hint>
-
         </PasswordBox>
 
         <Button  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding LoginCommand}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="15" Cursor="Hand"  >
-            <Grid>
+            <Grid> <!-- 带图标的按钮 -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>

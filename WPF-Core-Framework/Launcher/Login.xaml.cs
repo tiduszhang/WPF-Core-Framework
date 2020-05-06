@@ -64,7 +64,7 @@ namespace Launcher
              });
 
         }
-         
+
         /// <summary>
         /// 关闭窗口时
         /// </summary>
@@ -111,6 +111,22 @@ namespace Launcher
             }
         }
 
+        Themes.PaletteSelector palette = new Themes.PaletteSelector();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICommand ThemeCommand
+        {
+            get
+            {
+                return new MVVM.Command.DelegateCommand(() =>
+                {
+                    palette.ShowDialog();
+                });
+            }
+        }
+
         /// <summary>
         /// 用户点击用户登陆按钮触发
         /// </summary>
@@ -121,6 +137,8 @@ namespace Launcher
             {
                 return new MVVM.Command.DelegateCommand(() =>
                 {
+                    //new Themes.PaletteSelector().ShowDialog();
+
                     if (String.IsNullOrWhiteSpace(LoginModel.UserName))
                     {
                         //没有输入用户名

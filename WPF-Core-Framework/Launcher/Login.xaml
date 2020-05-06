@@ -13,82 +13,104 @@
         NonActiveWindowTitleBrush="{Binding WindowTitleBrush,ElementName=window}"
         NonActiveBorderBrush="{Binding BorderBrush,ElementName=window}"
         NonActiveGlowBrush="{Binding GlowBrush, ElementName=window}"
-        GlowBrush="{DynamicResource AccentColorBrush}"
+        GlowBrush="{Binding WindowTitleBrush,ElementName=window}"
         ShowIconOnTitleBar="False"
         BorderThickness="1"
         WindowStartupLocation="CenterScreen"   SizeToContent="WidthAndHeight"  TitleBarHeight="124" MinWidth="419" ResizeMode="NoResize">
     <MahApps:MetroWindow.WindowTitleBrush>
+        <!-- 头部背景图 -->
         <ImageBrush ImageSource="/images/title_bg.png"/>
     </MahApps:MetroWindow.WindowTitleBrush>
-    <MahApps:MetroWindow.WindowButtonCommands><!-- 头部按钮样式-->
+    <MahApps:MetroWindow.WindowButtonCommands>
+        <!-- 头部按钮样式-->
         <MahApps:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands.Win10}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="32"/>
     </MahApps:MetroWindow.WindowButtonCommands>
-    <MahApps:MetroWindow.TitleTemplate> <!-- 头部背景 -->
+    <MahApps:MetroWindow.TitleTemplate>
+        <!-- 头部标题，若不需要可以在语言文件中配置成全角空格。 -->
         <DataTemplate>
             <TextBlock Text="{Binding DataContext.DisplayName[LoginModel], ElementName=window}" Margin="10,5"/>
         </DataTemplate>
     </MahApps:MetroWindow.TitleTemplate>
-    <MahApps:MetroWindow.RightWindowCommands ><!-- 头部右侧自定义按钮 -->
+    <MahApps:MetroWindow.RightWindowCommands >
+        <!-- 头部右侧自定义按钮 -->
         <MahApps:WindowCommands  VerticalContentAlignment="Top">
-            <Button Content="？" Height="32"/><!-- 关于 -->
+            <!-- 主题设置 -->
+            <Button Height="32" Command="{Binding ThemeCommand}">
+                <materialDesign:PackIcon Kind="Palette"  />
+            </Button>
+            <Button Height="32">
+                <materialDesign:PackIcon Kind="Settings" />
+            </Button>
+            <!-- 设置 -->
+            <Button Height="32">
+                <materialDesign:PackIcon Kind="Help" />
+            </Button>
+            <!-- 关于 -->
         </MahApps:WindowCommands>
     </MahApps:MetroWindow.RightWindowCommands>
-    <Grid Margin="50,20" >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid Margin="50,20" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!--<TextBlock  Grid.Row="0"  Grid.Column="1"  Margin="10,10,10,0"   Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[UserName]}"/>-->
-        <TextBox Name="txtUserName"
+            <!--<TextBlock  Grid.Row="0"  Grid.Column="1"  Margin="10,10,10,0"   Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[UserName]}"/>-->
+            <TextBox Name="txtUserName"
                  Grid.Row="1"  Grid.Column="1" Margin="5"
                  Text="{Binding LoginModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  materialDesign:HintAssist.IsFloating="True" materialDesign:HintAssist.FloatingScale="1"  materialDesign:TextFieldAssist.TextBoxViewMargin="2,3">
-            <materialDesign:HintAssist.Hint><!-- 输入框水印 -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Column="0" Kind="Account" Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[UserName]}"  Margin="5,0" />
-                </Grid>
-            </materialDesign:HintAssist.Hint>
-        </TextBox>
+                <materialDesign:HintAssist.Hint>
+                    <!-- 输入框水印 -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon Grid.Column="0" Kind="Account" Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[UserName]}"  Margin="5,0" />
+                    </Grid>
+                </materialDesign:HintAssist.Hint>
+            </TextBox>
 
-        <!--<TextBlock  Grid.Row="2"  Grid.Column="1" Margin="10,10,10,0"  Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[Password]}"/>-->
-        <!--<materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"  />-->
-        <PasswordBox Name="txtPassword"
+            <!--<TextBlock  Grid.Row="2"  Grid.Column="1" Margin="10,10,10,0"  Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[Password]}"/>-->
+            <!--<materialDesign:PackIcon Grid.Row="3" Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"  />-->
+            <PasswordBox Name="txtPassword"
                   Grid.Row="3" Grid.Column="1" Margin="5"
                   materialDesign:HintAssist.IsFloating="True"  materialDesign:HintAssist.FloatingScale="1"  materialDesign:TextFieldAssist.TextBoxViewMargin="2,3"
                   mvvm:PasswordHelper.Password="{Binding LoginModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Cursor="IBeam" >
-            <materialDesign:HintAssist.Hint><!-- 输入框水印 -->
+                <materialDesign:HintAssist.Hint>
+                    <!-- 输入框水印 -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[Password]}" Margin="5,0" />
+                    </Grid>
+                </materialDesign:HintAssist.Hint>
+            </PasswordBox>
+
+            <Button  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding LoginCommand}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="15" Cursor="Hand"  >
                 <Grid>
+                    <!-- 带图标的按钮 -->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Column="0" Kind="Key" Foreground="{Binding ElementName=txtPassword, Path=BorderBrush}"  HorizontalAlignment="Right"  VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="1"  Text="{Binding LoginModel.DisplayName[Password]}" Margin="5,0" />
+                    <materialDesign:PackIcon Kind="Login" Grid.Column="0" Margin="2"/>
+                    <TextBlock Text="{Binding DisplayName[LoginCommand]}" Grid.Column="1"  Margin="15,2"/>
                 </Grid>
-            </materialDesign:HintAssist.Hint>
-        </PasswordBox>
+            </Button>
 
-        <Button  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding LoginCommand}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="15" Cursor="Hand"  >
-            <Grid> <!-- 带图标的按钮 -->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <materialDesign:PackIcon Kind="Login" Grid.Column="0" Margin="2"/>
-                <TextBlock Text="{Binding DisplayName[LoginCommand]}" Grid.Column="1"  Margin="15,2"/>
-            </Grid>
-        </Button>
+        </Grid>
     </Grid>
+
 </MahApps:MetroWindow>

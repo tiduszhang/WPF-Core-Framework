@@ -6,6 +6,8 @@
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
              xmlns:themes="clr-namespace:Themes"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+             xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance themes:PaletteSelectorViewModel, IsDesignTimeCreatable=False}"
@@ -92,36 +94,46 @@
             </wpf:Card>
         </DataTemplate>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Left" Margin="16 0 0 4">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock VerticalAlignment="Center">Standard Style</TextBlock>
-            <ToggleButton Grid.Column="1" Margin="8 4 16 4" Command="{Binding ToggleStyleCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Alternate Style</TextBlock>
-            <TextBlock Grid.Row="1" VerticalAlignment="Center">Light</TextBlock>
-            <ToggleButton Grid.Row="1" Grid.Column="1" Margin="8 4 16 4" Command="{Binding ToggleBaseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
-            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Dark</TextBlock>
-        </Grid>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </ScrollViewer>
-    </Grid>
+    <dockablz:Layout>
+        <dragablz:TabablzControl>
+
+            <TabItem Header="设置主题">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalAlignment="Left" Margin="16 0 0 4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock VerticalAlignment="Center">Standard Style</TextBlock>
+                        <ToggleButton Grid.Column="1" Margin="8 4 16 4" Command="{Binding ToggleStyleCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center">Alternate Style</TextBlock>
+                        <TextBlock Grid.Row="1" VerticalAlignment="Center">Light</TextBlock>
+                        <ToggleButton Grid.Row="1" Grid.Column="1" Margin="8 4 16 4" Command="{Binding ToggleBaseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Dark</TextBlock>
+                    </Grid>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="测试测试测试测试测试测试测试测试" />
+            <TabItem Header="testtesttesttesttesttesttesttesttest" />
+            <TabItem Header="我特长我特长我特长我特长我特长我特长我特长我特长我特长我特长我特长我特长我特长我特长我特长" />
+        </dragablz:TabablzControl>
+    </dockablz:Layout>
 </MahApps:MetroWindow>

@@ -34,10 +34,16 @@ namespace Themes
             var styleKey = alternate ? "MaterialDesignAlternateTabablzControlStyle" : "MaterialDesignTabablzControlStyle";
             var style = (Style)resourceDictionary[styleKey];
 
+            var template = (System.Windows.Controls.ControlTemplate)Application.Current.FindResource("MyTabablzControlControlTemplate");
+
             foreach (var tabablzControl in Dragablz.TabablzControl.GetLoadedInstances())
             {
                 tabablzControl.Style = style;
+                tabablzControl.Template = template;
+                tabablzControl.ApplyTemplate();
             }
+
+
         }
 
         private static void ApplyBase(bool isDark)

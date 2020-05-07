@@ -10,9 +10,8 @@
              xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance themes:PaletteSelectorViewModel, IsDesignTimeCreatable=False}"
-        
-            xmlns:MahApps="http://metro.mahapps.com/winfx/xaml/controls"
+             d:DataContext="{d:DesignInstance themes:PaletteSelectorViewModel, IsDesignTimeCreatable=False}"  
+             xmlns:MahApps="http://metro.mahapps.com/winfx/xaml/controls"
              NonActiveWindowTitleBrush="{Binding WindowTitleBrush}"
             NonActiveBorderBrush="{Binding BorderBrush}"
             NonActiveGlowBrush="{Binding GlowBrush}"
@@ -107,6 +106,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -119,6 +119,23 @@
                         <TextBlock Grid.Row="1" VerticalAlignment="Center">Light</TextBlock>
                         <ToggleButton Grid.Row="1" Grid.Column="1" Margin="8 4 16 4" Command="{Binding ToggleBaseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
                         <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Dark</TextBlock>
+
+                        <!-- 下拉框选择 -->
+                        <ComboBox Grid.Row="2" ItemsSource="{Binding Swatches, Mode=OneTime}"  SelectedItem="{Binding SelectSwatch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <Rectangle Margin="2 0" Height="10" Width="8">
+                                            <Rectangle.Fill>
+                                                <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <TextBlock Text="{Binding Name}" Margin="2 0"></TextBlock>
+                                    </StackPanel> 
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        
                     </Grid>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">

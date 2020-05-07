@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using MaterialDesignColors;
@@ -7,11 +9,11 @@ using MaterialDesignThemes.Wpf;
 
 namespace Themes
 {
-    public class PaletteSelectorViewModel
+    public class PaletteSelectorViewModel : INotifyPropertyChanged
     {
         public PaletteSelectorViewModel()
         {
-            Swatches = new SwatchesProvider().Swatches;
+            Swatches = new SwatchesProvider().Swatches.Where(o => o.IsAccented);
         }
 
         public ICommand ToggleStyleCommand { get; } = new AnotherCommandImplementation(o => ApplyStyle((bool)o));
@@ -23,6 +25,45 @@ namespace Themes
         public ICommand ApplyPrimaryCommand { get; } = new AnotherCommandImplementation(o => ApplyPrimary((Swatch)o));
 
         public ICommand ApplyAccentCommand { get; } = new AnotherCommandImplementation(o => ApplyAccent((Swatch)o));
+
+        /// <summary>
+        /// 应用样式
+        /// </summary>
+        private ICommand ApplyStyleCommand { get; } = new AnotherCommandImplementation(o =>
+        {
+            ApplyPrimary((Swatch)o);
+            ApplyAccent((Swatch)o);
+        });
+
+        /// <summary>
+        /// 属性更改通知
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// 选中的样式
+        /// </summary>
+        Swatch _SelectSwatch;
+        /// <summary>
+        /// 选中的样式
+        /// </summary>
+        public Swatch SelectSwatch
+        {
+            get
+            {
+                return _SelectSwatch;
+            }
+            set
+            {
+                _SelectSwatch = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs("SelectSwatch"));
+
+                if (_SelectSwatch != null)
+                {
+                    ApplyStyleCommand.Execute(_SelectSwatch);
+                }
+            }
+        }
 
         private static void ApplyStyle(bool alternate)
         {

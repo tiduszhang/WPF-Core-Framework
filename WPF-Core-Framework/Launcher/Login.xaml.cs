@@ -111,7 +111,7 @@ namespace Launcher
             }
         }
 
-        Themes.PaletteSelector palette = new Themes.PaletteSelector();
+       
 
         /// <summary>
         /// 
@@ -122,7 +122,7 @@ namespace Launcher
             {
                 return new MVVM.Command.DelegateCommand(() =>
                 {
-                    palette.ShowDialog();
+                    Themes.PaletteSelector.Instance.ShowDialog();
                 });
             }
         }

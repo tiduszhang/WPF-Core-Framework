@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows;
 using Common;
@@ -66,16 +68,14 @@ namespace Launcher
             "App完成启动".WriteToLog(log4net.Core.Level.Info, "BB");
 
             Task.Factory.StartNew(() =>
-            {
-
+            { 
                 do
                 {
                     "APP task AA 正在写入日志测试！".WriteToLog(log4net.Core.Level.Info, "AA");
                     "APP task BB 正在写入日志测试！".WriteToLog(log4net.Core.Level.Info, "BB");
                     System.Threading.Thread.Sleep(1);
-                } while (true);
-
-            });
+                } while (true); 
+            }); 
         }
 
         /// <summary>

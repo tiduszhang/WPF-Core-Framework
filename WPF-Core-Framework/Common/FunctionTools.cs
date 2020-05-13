@@ -28,17 +28,34 @@ namespace Common
             //return System.BitConverter.ToString(value);
             //return Encoding.UTF8.GetString(value);
         }
+        /// <summary>
+        /// 将字符串转换成二进制 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static byte[] ConvertToByte(this string value)
+        {
+            return Encoding.Default.GetBytes(value); 
+        }
 
         /// <summary>
-        /// 将二进制转换成字符串 
+        /// 将二进制转换成UTF-8字符串 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static string ConvertToUTF8String(this byte[] value)
         {
-            return Encoding.UTF8.GetString(value);
-            //return System.BitConverter.ToString(value);
-            //return Encoding.UTF8.GetString(value);
+            return Encoding.UTF8.GetString(value); 
+        }
+
+        /// <summary>
+        /// 将字符串转换成UTF-8二进制
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static byte[] ConvertToUTF8Bytes(this string value)
+        {
+            return Encoding.UTF8.GetBytes(value);
         }
 
         /// <summary>

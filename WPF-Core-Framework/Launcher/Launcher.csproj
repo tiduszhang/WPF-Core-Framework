@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Themes\Themes.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="lang\" />
+  </ItemGroup>
+
 </Project>

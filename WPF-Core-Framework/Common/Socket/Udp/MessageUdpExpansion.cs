@@ -37,5 +37,31 @@ namespace Common
         }
 
 
+        /// <summary>
+        /// 注册监听事件-客户端
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="action"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public static void RegisterUdpClientReceiveMessage(this object value, Action<Message> action, string ip = "127.0.0.1", int port = 12333)
+        {
+            UdpHost tcpHost = UdpHost.GetInstence(ip, port);
+            tcpHost.ReceiveMessage += action;
+        }
+
+        /// <summary>
+        /// 注册监听事件-客户端
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="action"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public static void UnRegisterUdpClientReceiveMessage(this object value, Action<Message> action, string ip = "127.0.0.1", int port = 12333)
+        {
+            UdpHost tcpHost = UdpHost.GetInstence(ip, port);
+            tcpHost.ReceiveMessage -= action;
+        }
+
     }
 }

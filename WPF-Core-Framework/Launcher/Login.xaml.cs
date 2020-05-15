@@ -95,7 +95,7 @@ namespace Launcher
         /// 实体
         /// </summary>
         [AutoConstruction(Type = typeof(LoginModel))]
-        [Display(Name = "用户登陆", ResourceType = typeof(LanguageResource), ShortName = "Login_Title")]
+        [Display( Name = "用户登陆", ResourceType = typeof(LanguageResource), ShortName = "Login_Title")]
         public dynamic LoginModel
         {
             get

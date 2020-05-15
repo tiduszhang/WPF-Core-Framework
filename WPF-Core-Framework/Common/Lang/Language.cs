@@ -26,7 +26,7 @@ namespace Common
         public string Name { get; set; }
 
         /// <summary>
-        /// 语言编码
+        /// 语言编号
         /// </summary>
         public string Code { get; set; }
     }

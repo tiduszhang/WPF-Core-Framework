@@ -94,27 +94,18 @@ namespace Launcher
         /// <summary>
         /// 实体
         /// </summary>
-        private LoginModel _LoginModel = null;
-        /// <summary>
-        /// 实体
-        /// </summary>
+        [AutoConstruction(Type = typeof(LoginModel))]
         [Display(Name = "用户登陆", ResourceType = typeof(LanguageResource), ShortName = "Login_Title")]
-        public LoginModel LoginModel
+        public dynamic LoginModel
         {
             get
             {
-                if (_LoginModel == null)
-                {
-                    _LoginModel = new LoginModel();
-                }
-                return _LoginModel;
+                return this.GetValue<dynamic>();
             }
         }
 
-       
-
         /// <summary>
-        /// 
+        /// 点击主题触发
         /// </summary>
         public ICommand ThemeCommand
         {
@@ -138,7 +129,6 @@ namespace Launcher
                 return new MVVM.Command.DelegateCommand(() =>
                 {
                     //new Themes.PaletteSelector().ShowDialog();
-
                     if (String.IsNullOrWhiteSpace(LoginModel.UserName))
                     {
                         //没有输入用户名

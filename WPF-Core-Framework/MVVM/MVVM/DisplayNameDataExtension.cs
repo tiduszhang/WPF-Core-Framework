@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
 namespace MVVM
@@ -29,32 +30,30 @@ namespace MVVM
             string strName = "";
             if (Attributes != null && Attributes.Length > 0)
             {
-                foreach (object attribute in Attributes)
+                var attribute = Attributes.FirstOrDefault(o => o is DisplayAttribute);
+
+                if (attribute != null)
                 {
-                    if (attribute is DisplayAttribute)
+                    try
                     {
-                        try
+                        DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                        if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                         {
-                            DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                            strName = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Name, "name");
+                        }
+
+                        if (String.IsNullOrWhiteSpace(strName))
+                        {
                             if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                             {
-                                strName = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Name, "name");
+                                vAttribute.ResourceType = null;
                             }
-
-                            if (String.IsNullOrWhiteSpace(strName))
-                            {
-                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
-                                {
-                                    vAttribute.ResourceType = null;
-                                }
-                                strName = vAttribute.GetName();
-                            }
-                            break;
+                            strName = vAttribute.GetName();
                         }
-                        catch (Exception ex)
-                        {
-                            ex.ToString();
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
                     }
                 }
             }

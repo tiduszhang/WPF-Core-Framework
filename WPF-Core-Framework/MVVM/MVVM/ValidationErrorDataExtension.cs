@@ -51,7 +51,6 @@ namespace MVVM
                                     }
                                     strErrorMessage = !String.IsNullOrWhiteSpace(vAttribute.ErrorMessage) ? vAttribute.ErrorMessage : vAttribute.GetValidationResult(value, new ValidationContext(value, null, null)).ErrorMessage;
                                 }
-                                break;
                             }
                         }
                         catch (Exception ex)

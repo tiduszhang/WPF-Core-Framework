@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
 namespace MVVM
@@ -29,32 +30,30 @@ namespace MVVM
             string strPromptData = "";
             if (Attributes != null && Attributes.Length > 0)
             {
-                foreach (object attribute in Attributes)
+                var attribute = Attributes.FirstOrDefault(o => o is DisplayAttribute);
+
+                if (attribute != null)
                 {
-                    if (attribute is DisplayAttribute)
+                    try
                     {
-                        try
+                        DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                        if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                         {
-                            DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                            strPromptData = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Prompt, "prompt");
+                        }
+
+                        if (String.IsNullOrWhiteSpace(strPromptData))
+                        {
                             if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                             {
-                                strPromptData = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Prompt, "prompt");
+                                vAttribute.ResourceType = null;
                             }
-
-                            if (String.IsNullOrWhiteSpace(strPromptData))
-                            {
-                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
-                                {
-                                    vAttribute.ResourceType = null;
-                                }
-                                strPromptData = vAttribute.GetPrompt();
-                            }
-                            break;
+                            strPromptData = vAttribute.GetPrompt();
                         }
-                        catch (Exception ex)
-                        {
-                            ex.ToString();
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
                     }
                 }
             }

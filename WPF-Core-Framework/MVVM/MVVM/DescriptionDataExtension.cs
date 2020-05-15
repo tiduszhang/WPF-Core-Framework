@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
 namespace MVVM
@@ -30,33 +31,31 @@ namespace MVVM
             string strDescription = "";
             if (Attributes != null && Attributes.Length > 0)
             {
-                foreach (object attribute in Attributes)
-                {
-                    if (attribute is DisplayAttribute)
-                    {
-                        try
-                        {
-                            DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                var attribute = Attributes.FirstOrDefault(o => o is DisplayAttribute);
 
+                if (attribute != null)
+                {
+                    try
+                    {
+                        DisplayAttribute vAttribute = attribute as DisplayAttribute;
+
+                        if (vAttribute.ResourceType == typeof(Common.LanguageResource))
+                        {
+                            strDescription = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Description, "description");
+                        }
+
+                        if (String.IsNullOrWhiteSpace(strDescription))
+                        {
                             if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                             {
-                                strDescription = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.Description, "description");
+                                vAttribute.ResourceType = null;
                             }
-
-                            if (String.IsNullOrWhiteSpace(strDescription))
-                            {
-                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
-                                {
-                                    vAttribute.ResourceType = null;
-                                }
-                                strDescription = vAttribute.GetDescription();
-                            }
-                            break;
+                            strDescription = vAttribute.GetDescription();
                         }
-                        catch (Exception ex)
-                        {
-                            ex.ToString();
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
                     }
                 }
             }

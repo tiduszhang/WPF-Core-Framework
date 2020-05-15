@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
 namespace MVVM
@@ -29,32 +30,30 @@ namespace MVVM
             string strShortName = "";
             if (Attributes != null && Attributes.Length > 0)
             {
-                foreach (object attribute in Attributes)
+                var attribute = Attributes.FirstOrDefault(o => o is DisplayAttribute);
+
+                if (attribute != null)
                 {
-                    if (attribute is DisplayAttribute)
+                    try
                     {
-                        try
+                        DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                        if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                         {
-                            DisplayAttribute vAttribute = attribute as DisplayAttribute;
+                            strShortName = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.ShortName, "shortname");
+                        }
+
+                        if (String.IsNullOrWhiteSpace(strShortName))
+                        {
                             if (vAttribute.ResourceType == typeof(Common.LanguageResource))
                             {
-                                strShortName = Common.LangHelper.GetValue(vAttribute.ShortName, vAttribute.ShortName, "shortname");
+                                vAttribute.ResourceType = null;
                             }
-
-                            if (String.IsNullOrWhiteSpace(strShortName))
-                            {
-                                if (vAttribute.ResourceType == typeof(Common.LanguageResource))
-                                {
-                                    vAttribute.ResourceType = null;
-                                }
-                                strShortName = vAttribute.GetShortName();
-                            }
-                            break;
+                            strShortName = vAttribute.GetShortName();
                         }
-                        catch (Exception ex)
-                        {
-                            ex.ToString();
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
                     }
                 }
             }

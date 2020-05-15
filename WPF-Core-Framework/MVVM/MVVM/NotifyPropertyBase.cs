@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -125,11 +126,73 @@ namespace MVVM
                 throw new ArgumentException("invalid " + propertyName);
             }
             object _propertyValue;
-            if (!_ValueDictionary.TryGetValue(propertyName, out _propertyValue))
+            if (!_ValueDictionary.TryGetValue(propertyName.ToLowerInvariant(), out _propertyValue) && _propertyValue != null)
             {
-                _propertyValue = default(T);
-                _ValueDictionary.Add(propertyName, _propertyValue);
+                return (T)_propertyValue;
             }
+
+            //获取属性
+            var property = this.GetType().GetProperty(propertyName);
+            var attributes = property.GetCustomAttributes(false);
+            if (attributes == null || attributes.Length <= 0)
+            {
+                return (T)_propertyValue;
+            }
+            var attribute = attributes.FirstOrDefault(o => o is AutoConstructionAttribute);
+
+            if (attribute == null)
+            {
+                return (T)_propertyValue;
+            }
+
+            AutoConstructionAttribute autoConstructionAttribute = attribute as AutoConstructionAttribute;
+
+            //获取属性构造类型
+            Type objType = autoConstructionAttribute.Type;
+            if (objType == null)
+            {
+                objType = typeof(T);
+            }
+
+            if (autoConstructionAttribute.IsSingle)//单例
+            {
+                lock (AutoConstructionAttribute.ValueDictionary)
+                {
+                    if (AutoConstructionAttribute.ValueDictionary.TryGetValue(objType, out _propertyValue) && _propertyValue != null)
+                    {
+                        _ValueDictionary[propertyName.ToLowerInvariant()] = _propertyValue;
+                        return (T)_propertyValue;
+                    }
+                }
+            }
+
+            //获取属性构造时使用的参数
+            object args = autoConstructionAttribute.args;
+            try
+            {
+                if (args == null)//自动构造
+                {
+                    _propertyValue = Activator.CreateInstance(objType);
+                }
+                else
+                {
+                    _propertyValue = Activator.CreateInstance(objType, args);
+                } 
+                _ValueDictionary[propertyName.ToLowerInvariant()] = _propertyValue;
+
+                if (autoConstructionAttribute.IsSingle)//单例
+                {
+                    lock (AutoConstructionAttribute.ValueDictionary)
+                    {
+                        AutoConstructionAttribute.ValueDictionary[objType] = _propertyValue;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.ToString().WriteToLog(log4net.Core.Level.Debug);
+            }
+
             return (T)_propertyValue;
         }
 
@@ -144,15 +207,15 @@ namespace MVVM
         /// <param name="value"></param>
         /// <returns></returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
-        { 
+        {
             var data = this._ValueDictionary.FirstOrDefault(dictionary => dictionary.Key.ToLowerInvariant() == binder.Name.ToLowerInvariant());
 
-            if (!String.IsNullOrWhiteSpace(data.Key))
+            if (!String.IsNullOrWhiteSpace(data.Key.ToLowerInvariant()))
             {
-                this._ValueDictionary.Remove(data.Key);
+                this._ValueDictionary.Remove(data.Key.ToLowerInvariant());
             }
 
-            this._ValueDictionary[binder.Name] = value;
+            this._ValueDictionary[binder.Name.ToLowerInvariant()] = value;
 
             OnPropertyChanged(binder.Name);
             //return base.TrySetMember(binder, value);
@@ -167,9 +230,9 @@ namespace MVVM
         /// <param name="propertyName"> </param>
         public virtual void SetValue<T>(T value, [CallerMemberName]string propertyName = "")
         {
-            if (!_ValueDictionary.ContainsKey(propertyName) || _ValueDictionary[propertyName] != (object)value)
+            if (!_ValueDictionary.ContainsKey(propertyName.ToLowerInvariant()) || _ValueDictionary[propertyName.ToLowerInvariant()] != (object)value)
             {
-                _ValueDictionary[propertyName] = value;
+                _ValueDictionary[propertyName.ToLowerInvariant()] = value;
             }
             OnPropertyChanged(propertyName);
         }

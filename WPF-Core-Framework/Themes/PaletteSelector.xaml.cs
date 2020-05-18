@@ -15,6 +15,8 @@ namespace Themes
             InitializeComponent();
 
             this.DataContext = new PaletteSelectorViewModel();
+
+            this.Icon = Application.Current.MainWindow.Icon;
         }
 
         /// <summary>

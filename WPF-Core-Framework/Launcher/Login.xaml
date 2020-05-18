@@ -16,14 +16,14 @@
         GlowBrush="{Binding WindowTitleBrush,ElementName=window}"
         ShowIconOnTitleBar="False"
         BorderThickness="1"
-        WindowStartupLocation="CenterScreen"   SizeToContent="WidthAndHeight"  TitleBarHeight="124" MinWidth="419" ResizeMode="NoResize">
+        WindowStartupLocation="CenterScreen"   SizeToContent="WidthAndHeight"  TitleBarHeight="124" MinWidth="419" ResizeMode="NoResize" Icon="/LOGO.ico">
     <MahApps:MetroWindow.WindowTitleBrush>
         <!-- 头部背景图 -->
         <!--<ImageBrush ImageSource="/images/title_bg.png"/>-->
         <VisualBrush>
             <VisualBrush.Visual>
-                <Grid Background="{DynamicResource MahApps.Brushes.WindowTitle}" Width="10" Height="10">
-                    <Rectangle>
+                <Grid Background="{DynamicResource MahApps.Brushes.WindowTitle}" Width="1" Height="1" Margin="0">
+                    <Rectangle Margin="0">
                         <Rectangle.Fill>
                             <ImageBrush ImageSource="/images/title_bg.png" Opacity="0.50" />
                         </Rectangle.Fill>

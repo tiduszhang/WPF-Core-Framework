@@ -19,7 +19,18 @@
         WindowStartupLocation="CenterScreen"   SizeToContent="WidthAndHeight"  TitleBarHeight="124" MinWidth="419" ResizeMode="NoResize">
     <MahApps:MetroWindow.WindowTitleBrush>
         <!-- 头部背景图 -->
-        <ImageBrush ImageSource="/images/title_bg.png"/>
+        <!--<ImageBrush ImageSource="/images/title_bg.png"/>-->
+        <VisualBrush>
+            <VisualBrush.Visual>
+                <Grid Background="{DynamicResource MahApps.Brushes.WindowTitle}" Width="10" Height="10">
+                    <Rectangle>
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="/images/title_bg.png" Opacity="0.50" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+            </VisualBrush.Visual>
+        </VisualBrush>
     </MahApps:MetroWindow.WindowTitleBrush>
     <MahApps:MetroWindow.WindowButtonCommands>
         <!-- 头部按钮样式-->

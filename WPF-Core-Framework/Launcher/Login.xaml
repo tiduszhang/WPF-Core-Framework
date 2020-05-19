@@ -15,7 +15,7 @@
         NonActiveGlowBrush="{Binding GlowBrush, ElementName=window}"
         GlowBrush="{Binding WindowTitleBrush,ElementName=window}"
         ShowIconOnTitleBar="False"
-        BorderThickness="1"
+        BorderThickness="1" Title="{Binding DataContext.DisplayName[LoginModel], ElementName=window}"
         WindowStartupLocation="CenterScreen"   SizeToContent="WidthAndHeight"  TitleBarHeight="124" MinWidth="419" ResizeMode="NoResize" Icon="/LOGO.ico">
     <MahApps:MetroWindow.WindowTitleBrush>
         <!-- 头部背景图 -->
@@ -23,6 +23,14 @@
         <VisualBrush>
             <VisualBrush.Visual>
                 <Grid Background="{DynamicResource MahApps.Brushes.WindowTitle}" Width="1" Height="1" Margin="0">
+                    <Rectangle Margin="0">
+                        <Rectangle.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#7FFFFFFF"/>
+                                <GradientStop Color="#33FFFFFF" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
                     <Rectangle Margin="0">
                         <Rectangle.Fill>
                             <ImageBrush ImageSource="/images/title_bg.png" Opacity="0.50" />
@@ -39,7 +47,7 @@
     <MahApps:MetroWindow.TitleTemplate>
         <!-- 头部标题，若不需要可以在语言文件中配置成全角空格。 -->
         <DataTemplate>
-            <TextBlock Text="{Binding DataContext.DisplayName[LoginModel], ElementName=window}" Margin="10,5"/>
+            <TextBlock Text="{Binding}" Margin="10,5"/>
         </DataTemplate>
     </MahApps:MetroWindow.TitleTemplate>
     <MahApps:MetroWindow.RightWindowCommands >
@@ -72,7 +80,6 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
             <!--<TextBlock  Grid.Row="0"  Grid.Column="1"  Margin="10,10,10,0"   Foreground="{Binding ElementName=txtUserName, Path=BorderBrush}"  Text="{Binding LoginModel.DisplayName[UserName]}"/>-->
             <TextBox Name="txtUserName"
                  Grid.Row="1"  Grid.Column="1" Margin="5"

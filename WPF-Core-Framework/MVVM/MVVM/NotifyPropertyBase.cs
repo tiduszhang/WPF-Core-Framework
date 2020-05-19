@@ -126,7 +126,7 @@ namespace MVVM
                 throw new ArgumentException("invalid " + propertyName);
             }
             object _propertyValue;
-            if (!_ValueDictionary.TryGetValue(propertyName.ToLowerInvariant(), out _propertyValue) && _propertyValue != null)
+            if (_ValueDictionary.TryGetValue(propertyName.ToLowerInvariant(), out _propertyValue) && _propertyValue != null)
             {
                 return (T)_propertyValue;
             }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MVVM
@@ -14,26 +16,11 @@ namespace MVVM
         /// </summary>
         public NotifyBaseModel()
         {
-            DisplayName = new DisplayNameData()
-            {
-                NotifyProperty = this
-            };
-            Description = new DescriptionData()
-            {
-                NotifyProperty = this
-            };
-            Prompt = new PromptData()
-            {
-                NotifyProperty = this
-            };
-            ShortName = new ShortNameData()
-            {
-                NotifyProperty = this
-            };
-            ValidationError = new ValidationErrorData()
-            {
-                NotifyProperty = this
-            };
+            DisplayName.NotifyProperty = this;
+            Description.NotifyProperty = this;
+            Prompt.NotifyProperty = this;
+            ShortName.NotifyProperty = this;
+            ValidationError.NotifyProperty = this;
 
             this.ErrorMessage = "";
             this.IsValid = true;
@@ -42,6 +29,7 @@ namespace MVVM
         /// <summary>
         /// DisplayNameData
         /// </summary>
+        [AutoConstruction]
         [System.Text.Json.Serialization.JsonIgnore]
         public virtual DisplayNameData DisplayName
         {
@@ -58,6 +46,7 @@ namespace MVVM
         /// <summary>
         /// ValidationErrorData
         /// </summary>
+        [AutoConstruction]
         [System.Text.Json.Serialization.JsonIgnore]
         public virtual ValidationErrorData ValidationError
         {
@@ -74,6 +63,7 @@ namespace MVVM
         /// <summary>
         /// ShortNameData
         /// </summary>
+        [AutoConstruction]
         [System.Text.Json.Serialization.JsonIgnore]
         public virtual ShortNameData ShortName
         {
@@ -90,6 +80,7 @@ namespace MVVM
         /// <summary>
         /// PromptData
         /// </summary>
+        [AutoConstruction]
         [System.Text.Json.Serialization.JsonIgnore]
         public virtual PromptData Prompt
         {
@@ -106,6 +97,7 @@ namespace MVVM
         /// <summary>
         /// DescriptionData
         /// </summary>
+        [AutoConstruction]
         [System.Text.Json.Serialization.JsonIgnore]
         public virtual DescriptionData Description
         {

@@ -80,7 +80,7 @@ namespace Launcher
     /// 用户登陆逻辑
     /// </summary>
     public class LoginViewModel : NotifyBaseModel
-    {
+    { 
         /// <summary>
         /// 登陆失败
         /// </summary>
@@ -95,12 +95,16 @@ namespace Launcher
         /// 实体
         /// </summary>
         [AutoConstruction(Type = typeof(LoginModel))]
-        [Display( Name = "用户登陆", ResourceType = typeof(LanguageResource), ShortName = "Login_Title")]
+        [Display(Name = "用户登陆", ResourceType = typeof(LanguageResource), ShortName = "Login_Title")]
         public dynamic LoginModel
         {
             get
             {
                 return this.GetValue<dynamic>();
+            }
+            set
+            {
+                this.SetValue<dynamic>(value);
             }
         }
 

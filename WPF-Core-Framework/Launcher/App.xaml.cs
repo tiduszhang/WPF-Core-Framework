@@ -21,11 +21,7 @@ namespace Launcher
         /// 程序启动事件
         /// </summary>
         public System.Threading.EventWaitHandle ProgramStarted { get; set; }
-        /// <summary>
-        /// 程序唯一标识
-        /// </summary>
-        string mutexName = "78A97384-F4CB-4FBE-990B-8242DEF6AC45";
-
+      
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -40,15 +36,6 @@ namespace Launcher
         /// <param name="e"></param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            //检查程序是否已经启动过一次
-            ProgramStarted = ApplicationTools.StartOnece(mutexName);
-            if (ProgramStarted == null)//判断已经启动一次则唤醒程序退出第二次启动。
-            {
-                Application.Current.Shutdown();
-                Environment.Exit(-1);
-                return;
-            }
-
             this.DispatcherUnhandledException += App_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             System.Threading.Tasks.TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;

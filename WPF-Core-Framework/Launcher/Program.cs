@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Launcher
 {
@@ -14,6 +16,13 @@ namespace Launcher
         /// 程序唯一标识
         /// </summary>
         static string mutexName = "78A97384-F4CB-4FBE-990B-8242DEF6AC45";
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+                                    Host.CreateDefaultBuilder(args)
+                                        .ConfigureServices((hostContext, services) =>
+                                        {
+                                            services.AddHostedService<Worker>();
+                                        })
+                                         .UseWindowsService();
 
         /// <summary>
         /// 应用程序的主入口点
@@ -24,12 +33,14 @@ namespace Launcher
         {
             if (args != null && args.Length > 0)
             {
-                ServiceBase[] ServicesToRun;
-                ServicesToRun = new ServiceBase[]
-                {
-                    new Service1()
-                };
-                ServiceBase.Run(ServicesToRun);
+                //ServiceBase[] ServicesToRun;
+                //ServicesToRun = new ServiceBase[]
+                //{
+                //    new Service1()
+                //};
+                //ServiceBase.Run(ServicesToRun);
+
+                CreateHostBuilder(args);
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -16,24 +17,38 @@ namespace Common
         public int Timeout { get; set; }
 
         /// <summary>
+        /// 断点续接位置（一般用于下载文件）
+        /// </summary>
+        public long Seek { get; set; }
+
+        /// <summary>
         /// 获取请求
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
         protected override WebRequest GetWebRequest(Uri address)
         {
-            if (Timeout <= 0)
-            {
-                Timeout = 3000;
-            }
+            //if (Timeout <= 0)
+            //{
+            //    Timeout = 3000;
+            //}
             try
             {
                 WebRequest request = base.GetWebRequest(address);
                 if (request is HttpWebRequest)
                 {
                     HttpWebRequest httpRequest = request as HttpWebRequest;
-                    httpRequest.Timeout = Timeout;
-                    httpRequest.ReadWriteTimeout = Timeout;
+
+                    if (Seek > 0)
+                    {
+                        httpRequest.AddRange(Seek);
+                    }
+
+                    if (Timeout > 0)
+                    {
+                        httpRequest.Timeout = Timeout;
+                        httpRequest.ReadWriteTimeout = Timeout;
+                    }
                     return httpRequest;
                 }
                 else if (request is FtpWebRequest)
@@ -45,6 +60,7 @@ namespace Common
                     //    fileDelete(address.ToString());
                     //}
                     var ftpRequest = base.GetWebRequest(address) as FtpWebRequest;
+
                     ftpRequest.KeepAlive = false;
                     ftpRequest.Timeout = Timeout;
                     ftpRequest.ReadWriteTimeout = Timeout;
@@ -204,7 +220,5 @@ namespace Common
             return success;
         }
 
-
-        
     }
 }

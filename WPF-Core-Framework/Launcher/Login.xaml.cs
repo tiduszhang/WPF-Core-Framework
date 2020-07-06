@@ -117,6 +117,7 @@ namespace Launcher
             {
                 return new MVVM.Command.DelegateCommand(() =>
                 {
+                    WebClientHelper.test();
                     Themes.PaletteSelector.Instance.ShowDialog();
                 });
             }

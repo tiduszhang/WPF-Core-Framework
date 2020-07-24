@@ -39,6 +39,16 @@ namespace Common
         public int Port { get; set; }
 
         /// <summary>
+        /// 编码格式
+        /// </summary>
+        public Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// 结束标记
+        /// </summary>
+        public int? LineOff { get; set; }
+
+        /// <summary>
         /// 开启TCP监听
         /// </summary>
         public void Acceptor()
@@ -54,10 +64,12 @@ namespace Common
         /// <summary>
         /// 开始监听，启用监听时使用，用于设置端口号开启服务。
         /// </summary>
+        /// <param name="encoding"></param>
         /// <param name="port"></param>
-        public static void Start(int port = 12333)
+        public static void Start(Encoding encoding, int port = 12333)
         {
             var tcpService = GetInstence();
+            tcpService.Encoding = encoding;
             tcpService.Port = port;
             tcpService.Acceptor();
         }
@@ -115,7 +127,12 @@ namespace Common
                 System.Threading.ThreadPool.QueueUserWorkItem(obj =>
                 {
                     var ns = client.GetStream();
-                    StreamReader reader = new StreamReader(ns, Encoding.UTF8);
+                    if (this.Encoding == null)
+                    {
+                        this.Encoding = Encoding.UTF8;
+                    }
+
+                    StreamReader reader = new StreamReader(ns, this.Encoding);
                     StreamWriter writer = new StreamWriter(ns);
 
                     try
@@ -123,10 +140,29 @@ namespace Common
                         do
                         {
                             try
-                            { 
+                            {
                                 System.Threading.Thread.Sleep(1);
                                 var message = new Message();
-                                message.Content = reader.ReadLine();
+
+                                if (this.LineOff == null)
+                                {
+                                    message.Content = reader.ReadLine();
+                                }
+                                else
+                                {
+                                    StringBuilder stringBuilder = new StringBuilder();
+                                    var iChar = -1;
+
+                                    while((iChar = reader.Read()) > 0)
+                                    {
+                                        stringBuilder.Append((Char)iChar);
+                                        if(iChar == this.LineOff)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    message.Content = stringBuilder.ToString();
+                                }
 
                                 if (String.IsNullOrWhiteSpace(message.Content))
                                 {
@@ -155,7 +191,7 @@ namespace Common
                             catch (Exception ex)
                             {
                                 ex.ToString();
-                            } 
+                            }
                         } while (!((client.Client.Poll(500, SelectMode.SelectRead) && (client.Client.Available == 0)) || !client.Client.Connected));
 
                         ("客户端<" + (client.Client.RemoteEndPoint as IPEndPoint).Address.ToString() + ">已断开！").WriteToLog(log4net.Core.Level.Info);

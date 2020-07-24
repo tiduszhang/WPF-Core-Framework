@@ -56,6 +56,16 @@ namespace Common
         StreamReader TcpReader { get; set; }
 
         /// <summary>
+        /// 字符集
+        /// </summary>
+        public Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// 结束标记
+        /// </summary>
+        public int? LineOff { get; set; }
+
+        /// <summary>
         /// 是否关闭
         /// </summary>
         bool isClose = false;
@@ -63,10 +73,11 @@ namespace Common
         /// <summary>
         /// 获取实例
         /// </summary>
+        /// <param name="encoding"></param
         /// <param name="ip"></param>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static TcpHost GetInstence(string ip = "127.0.0.1", int port = 12333)
+        public static TcpHost GetInstence(Encoding encoding, string ip = "127.0.0.1", int port = 12333)
         {
             if(tcpHosts == null)
             {
@@ -88,6 +99,7 @@ namespace Common
                 tcpHost = new TcpHost();
                 tcpHost.IP = ip;
                 tcpHost.Port = port;
+                tcpHost.Encoding = encoding;
                 tcpHost.Connection();
                 lock (tcpHosts)
                 {
@@ -179,7 +191,13 @@ namespace Common
                     var NetworkStream = tcpClient.GetStream();
                     NetworkStream.ReadTimeout = 5 * 1000;
                     TcpWriter = new StreamWriter(NetworkStream);
-                    TcpReader = new StreamReader(NetworkStream, Encoding.UTF8);
+
+                    if(this.Encoding == null)
+                    {
+                        this.Encoding = Encoding.UTF8;
+                    }
+
+                    TcpReader = new StreamReader(NetworkStream, this.Encoding);
                     isClose = false;
                 }
                 catch (Exception ex)
@@ -233,7 +251,27 @@ namespace Common
                            {
                                if (ReceiveMessage != null)
                                {
-                                   var data = TcpReader.ReadLine();
+                                   string data = "";
+                                   if (LineOff == null)
+                                   {
+                                       data = TcpReader.ReadLine();
+                                   }
+                                   else
+                                   {
+                                       StringBuilder stringBuilder = new StringBuilder();
+                                       var iChar = -1;
+
+                                       while ((iChar = TcpReader.Read()) > 0)
+                                       {
+                                           stringBuilder.Append((Char)iChar);
+                                           if (iChar == this.LineOff)
+                                           {
+                                               break;
+                                           }
+                                       }
+                                       data = stringBuilder.ToString();
+                                   }
+
                                    if (!String.IsNullOrWhiteSpace(data))
                                    {
                                        Message message = new Message

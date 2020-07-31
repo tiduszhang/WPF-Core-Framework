@@ -153,10 +153,10 @@ namespace Common
                                     StringBuilder stringBuilder = new StringBuilder();
                                     var iChar = -1;
 
-                                    while((iChar = reader.Read()) > 0)
+                                    while ((iChar = reader.Read()) > 0)
                                     {
                                         stringBuilder.Append((Char)iChar);
-                                        if(iChar == this.LineOff)
+                                        if (iChar == this.LineOff)
                                         {
                                             break;
                                         }
@@ -170,22 +170,17 @@ namespace Common
                                 }
                                 ("接收到数据：" + message.Content).WriteToLog(log4net.Core.Level.Info);
                                 message.TcpWriter = writer;
-                                if (System.Windows.Application.Current != null)
+                                if (System.Threading.SynchronizationContext.Current != null)
                                 {
-                                    System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+
+                                    System.Threading.SynchronizationContext.Current.Post(callback =>
                                     {
-                                        if (ReceiveMessage != null)
-                                        {
-                                            ReceiveMessage(message);
-                                        }
-                                    }));
+                                        ReceiveMessage?.Invoke(message);
+                                    }, message);
                                 }
                                 else
                                 {
-                                    if (ReceiveMessage != null)
-                                    {
-                                        ReceiveMessage(message);
-                                    }
+                                    ReceiveMessage?.Invoke(message);
                                 }
                             }
                             catch (Exception ex)

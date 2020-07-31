@@ -62,8 +62,12 @@ namespace Common
                     var ftpRequest = base.GetWebRequest(address) as FtpWebRequest;
 
                     ftpRequest.KeepAlive = false;
-                    ftpRequest.Timeout = Timeout;
-                    ftpRequest.ReadWriteTimeout = Timeout;
+                    if (Timeout > 0)
+                    {
+                        ftpRequest.Timeout = Timeout;
+                        ftpRequest.ReadWriteTimeout = Timeout;
+                    }
+
                     return ftpRequest;
                 }
                 else

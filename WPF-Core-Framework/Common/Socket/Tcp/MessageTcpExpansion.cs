@@ -45,7 +45,7 @@ namespace Common
         /// <param name="port"></param>
         public static void RegisterTcpClientReceiveMessage(this object value, Action<Message> action, string ip = "127.0.0.1", int port = 12333)
         {
-            TcpHost tcpHost = TcpHost.GetInstence(ip, port);
+            TcpHost tcpHost = TcpHost.GetInstence(Encoding.UTF8, ip, port);
             tcpHost.ReceiveMessage += action;
         }
 
@@ -58,7 +58,7 @@ namespace Common
         /// <param name="port"></param>
         public static void UnRegisterTcpClientReceiveMessage(this object value, Action<Message> action, string ip = "127.0.0.1", int port = 12333)
         {
-            TcpHost tcpHost = TcpHost.GetInstence(ip, port);
+            TcpHost tcpHost = TcpHost.GetInstence(Encoding.UTF8, ip, port);
             tcpHost.ReceiveMessage -= action;
         }
         

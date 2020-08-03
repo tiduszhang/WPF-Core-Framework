@@ -29,6 +29,10 @@ namespace Common
         {
             return fastJSON.JSON.ToObject<T>(value, new fastJSON.JSONParameters()
             {
+                UseExtensions = false,
+                BlackListTypeChecking = false,
+                EnableAnonymousTypes = false,
+                UsingGlobalTypes = false,
                 IgnoreAttributes = new List<Type>()
                 {
                     typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
@@ -46,6 +50,10 @@ namespace Common
         {
             return fastJSON.JSON.ToJSON(obj, new fastJSON.JSONParameters()
             {
+                UseExtensions = false,
+                BlackListTypeChecking = false,
+                EnableAnonymousTypes = false,
+                UsingGlobalTypes = false,
                 IgnoreAttributes = new List<Type>()
                 {
                     typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)

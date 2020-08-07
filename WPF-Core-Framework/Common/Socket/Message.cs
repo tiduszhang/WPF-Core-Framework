@@ -18,7 +18,7 @@ namespace Common
         /// <summary>
         /// 消息内容JSON字符串，一般运行程序时指定的参数，比如打开浏览器时指定网址
         /// </summary>
-        public string Content { get; set; }
+        public byte[] Content { get; set; }
 
         /// <summary>
         /// 目标IP
@@ -43,7 +43,7 @@ namespace Common
         /// <summary>
         /// 远程主机写入
         /// </summary>
-        public StreamWriter TcpWriter { get; internal set; }
+        public NetworkStream NetworkStream { get; internal set; }
 
         /// <summary>
         /// Tcp返回消息
@@ -53,8 +53,8 @@ namespace Common
         {
             ("返回数据：" + content).WriteToLog(log4net.Core.Level.Info);
 
-            TcpWriter.WriteLine(content);
-            TcpWriter.Flush();
+            NetworkStream.Write(content.ConvertToUTF8Bytes());
+            NetworkStream.Flush();
         }
 
         /// <summary>

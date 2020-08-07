@@ -44,21 +44,11 @@ namespace Common
         /// IP
         /// </summary>
         public string IP { get; set; }
-         
-        /// <summary>
-        /// 网络流对象-写入
-        /// </summary>
-        StreamWriter TcpWriter { get; set; }
 
         /// <summary>
-        /// 网络流对象-读取
+        /// 
         /// </summary>
-        StreamReader TcpReader { get; set; }
-
-        /// <summary>
-        /// 字符集
-        /// </summary>
-        public Encoding Encoding { get; set; }
+        public NetworkStream NetworkStream { get; set; }
 
         /// <summary>
         /// 结束标记
@@ -73,13 +63,12 @@ namespace Common
         /// <summary>
         /// 获取实例
         /// </summary>
-        /// <param name="encoding"></param
         /// <param name="ip"></param>
         /// <param name="port"></param>
         /// <returns></returns>
-        public static TcpHost GetInstence(Encoding encoding, string ip = "127.0.0.1", int port = 12333)
+        public static TcpHost GetInstence(string ip = "127.0.0.1", int port = 12333)
         {
-            if(tcpHosts == null)
+            if (tcpHosts == null)
             {
                 tcpHosts = new System.Collections.Specialized.HybridDictionary();
             }
@@ -99,7 +88,6 @@ namespace Common
                 tcpHost = new TcpHost();
                 tcpHost.IP = ip;
                 tcpHost.Port = port;
-                tcpHost.Encoding = encoding;
                 tcpHost.Connection();
                 lock (tcpHosts)
                 {
@@ -146,32 +134,6 @@ namespace Common
             }
             tcpClient = null;
 
-            if (TcpWriter != null)
-            {
-                try
-                {
-                    TcpWriter.Close();
-
-                }
-                catch (Exception ex)
-                {
-                    ex.ToString();
-                }
-            }
-            TcpWriter = null;
-
-            if (TcpReader != null)
-            {
-                try
-                {
-                    TcpReader.Close();
-                }
-                catch (Exception ex)
-                {
-                    ex.ToString();
-                }
-            }
-            TcpReader = null;
         }
 
         /// <summary>
@@ -188,16 +150,8 @@ namespace Common
                         tcpClient = new TcpClient();
                     }
                     tcpClient.Connect(new System.Net.IPEndPoint(System.Net.IPAddress.Parse(IP), Port));
-                    var NetworkStream = tcpClient.GetStream();
+                    NetworkStream = tcpClient.GetStream();
                     NetworkStream.ReadTimeout = 5 * 1000;
-                    TcpWriter = new StreamWriter(NetworkStream);
-
-                    if(this.Encoding == null)
-                    {
-                        this.Encoding = Encoding.UTF8;
-                    }
-
-                    TcpReader = new StreamReader(NetworkStream, this.Encoding);
                     isClose = false;
                 }
                 catch (Exception ex)
@@ -220,12 +174,12 @@ namespace Common
             {
                 Connection();
             }
-            if (TcpWriter != null)
+            if (NetworkStream != null)
             {
                 ("从客户端向服务器发送数据：" + message.Content).WriteToLog(log4net.Core.Level.Info);
                 //var bData = (message.Content + Environment.NewLine).ConvertToBytes();
-                TcpWriter.WriteLine(message.Content);
-                TcpWriter.Flush();
+                NetworkStream.Write(message.Content, 0, message.Content.Length);
+                NetworkStream.Flush();
             }
         }
 
@@ -251,39 +205,46 @@ namespace Common
                            {
                                if (ReceiveMessage != null)
                                {
-                                   string data = "";
-                                   if (LineOff == null)
-                                   {
-                                       data = TcpReader.ReadLine();
-                                   }
-                                   else
-                                   {
-                                       StringBuilder stringBuilder = new StringBuilder();
-                                       var iChar = -1;
+                                   var message = new Message();
 
-                                       while ((iChar = TcpReader.Read()) > 0)
+                                   if (this.LineOff == null)
+                                   {
+                                       this.LineOff = (int)'\n';
+                                   }
+
+                                   var iChar = -1;
+
+                                   using (MemoryStream memoryStream = new MemoryStream())
+                                   {
+                                       while ((iChar = NetworkStream.ReadByte()) > 0)
                                        {
-                                           stringBuilder.Append((Char)iChar);
+                                           memoryStream.WriteByte((byte)iChar);
                                            if (iChar == this.LineOff)
                                            {
                                                break;
                                            }
                                        }
-                                       data = stringBuilder.ToString();
+                                       message.Content = memoryStream.ToArray();
                                    }
 
-                                   if (!String.IsNullOrWhiteSpace(data))
+                                   if (message.Content == null && message.Content.Length > 0)
                                    {
-                                       Message message = new Message
-                                       {
-                                           TcpWriter = TcpWriter,
-                                           Content = data,
-                                           IP = IP,
-                                           Port = Port
-                                       };
+                                       continue;
+                                   }
 
-                                       ("从服务器中接收数据：" + message.Content).WriteToLog(log4net.Core.Level.Info);
-                                       ReceiveMessage(message);
+                                   ("接收到数据：" + message.Content).WriteToLog(log4net.Core.Level.Info);
+                                   message.NetworkStream = NetworkStream;
+                                   if (System.Threading.SynchronizationContext.Current != null)
+                                   {
+
+                                       System.Threading.SynchronizationContext.Current.Post(callback =>
+                                       {
+                                           ReceiveMessage?.Invoke(message);
+                                       }, message);
+                                   }
+                                   else
+                                   {
+                                       ReceiveMessage?.Invoke(message);
                                    }
                                }
                            }

@@ -121,11 +121,10 @@ namespace Common
                 UdpReceiveResult receiveResult = udpReceiveResult.Result; 
                 try
                 {
-                    string strMessage = receiveResult.Buffer.ConvertToUTF8String();
-                    if (!String.IsNullOrWhiteSpace(strMessage))
+                    if (receiveResult.Buffer != null && receiveResult.Buffer.Length > 0)
                     {
                         Message message = new Message();
-                        message.Content = strMessage;
+                        message.Content = receiveResult.Buffer;
                         message.UdpServer = udpListener;
                         message.RemoteEndPoint = receiveResult.RemoteEndPoint;
                         message.IP = receiveResult.RemoteEndPoint.Address.ToString();

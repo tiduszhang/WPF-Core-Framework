@@ -163,9 +163,7 @@ namespace Common
             {
                 Connection();
             }
-
-            byte[] bdata = message.Content.ConvertToUTF8Bytes();
-            udpClient.Send(bdata, bdata.Length);
+            udpClient.Send(message.Content, message.Content.Length);
         }
 
         /// <summary>
@@ -188,11 +186,10 @@ namespace Common
                 UdpReceiveResult receiveResult = udpReceiveResult.Result;
                 try
                 {
-                    string strMessage = receiveResult.Buffer.ConvertToUTF8String();
-                    if (!String.IsNullOrWhiteSpace(strMessage))
+                    if (receiveResult.Buffer != null && receiveResult.Buffer.Length > 0)
                     {
                         Message message = new Message();
-                        message.Content = strMessage;
+                        message.Content = receiveResult.Buffer;
                         message.UdpServer = udpClient;
                         message.RemoteEndPoint = receiveResult.RemoteEndPoint;
                         message.IP = receiveResult.RemoteEndPoint.Address.ToString();

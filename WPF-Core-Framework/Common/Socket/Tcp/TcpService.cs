@@ -39,11 +39,6 @@ namespace Common
         public int Port { get; set; }
 
         /// <summary>
-        /// 编码格式
-        /// </summary>
-        public Encoding Encoding { get; set; }
-
-        /// <summary>
         /// 结束标记
         /// </summary>
         public int? LineOff { get; set; }
@@ -69,7 +64,6 @@ namespace Common
         public static void Start(Encoding encoding, int port = 12333)
         {
             var tcpService = GetInstence();
-            tcpService.Encoding = encoding;
             tcpService.Port = port;
             tcpService.Acceptor();
         }
@@ -127,13 +121,6 @@ namespace Common
                 System.Threading.ThreadPool.QueueUserWorkItem(obj =>
                 {
                     var ns = client.GetStream();
-                    if (this.Encoding == null)
-                    {
-                        this.Encoding = Encoding.UTF8;
-                    }
-
-                    StreamReader reader = new StreamReader(ns, this.Encoding);
-                    StreamWriter writer = new StreamWriter(ns);
 
                     try
                     {
@@ -146,30 +133,30 @@ namespace Common
 
                                 if (this.LineOff == null)
                                 {
-                                    message.Content = reader.ReadLine();
+                                    this.LineOff = (int)'\n';
                                 }
-                                else
-                                {
-                                    StringBuilder stringBuilder = new StringBuilder();
-                                    var iChar = -1;
 
-                                    while ((iChar = reader.Read()) > 0)
+                                var iChar = -1;
+
+                                using (MemoryStream memoryStream = new MemoryStream())
+                                {
+                                    while ((iChar = ns.ReadByte()) > 0)
                                     {
-                                        stringBuilder.Append((Char)iChar);
+                                        memoryStream.WriteByte((byte)iChar);
                                         if (iChar == this.LineOff)
                                         {
                                             break;
                                         }
                                     }
-                                    message.Content = stringBuilder.ToString();
+                                    message.Content = memoryStream.ToArray();
                                 }
 
-                                if (String.IsNullOrWhiteSpace(message.Content))
+                                if (message.Content == null && message.Content.Length > 0)
                                 {
                                     continue;
                                 }
                                 ("接收到数据：" + message.Content).WriteToLog(log4net.Core.Level.Info);
-                                message.TcpWriter = writer;
+                                message.NetworkStream = ns;
                                 if (System.Threading.SynchronizationContext.Current != null)
                                 {
 
@@ -200,8 +187,7 @@ namespace Common
                         //ms.Close();
                         //ms.Dispose();
                         //ms = null; 
-                        reader.Close();
-                        writer.Close();
+
                         ns.Close();
                         ns.Dispose();
                         ns = null;
